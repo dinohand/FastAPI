@@ -16,7 +16,10 @@
                 "--port",
                 "5000"
             ],
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "RUN_MODE":"PRD",
+            }
         },
         {
             "name": "Dev(FastApi)",
@@ -31,14 +34,20 @@
                 "5000"
             ],
 
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "RUN_MODE":"DEV",
+            }
         },
         {
             "name": "Test File",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "env": {
+                "RUN_MODE":"TEST",
+            }
         },
     ]
 }

@@ -1,0 +1,13 @@
+__pycache__/
+/.venv
+/app.log
+
+
+# Distribution / packaging
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
