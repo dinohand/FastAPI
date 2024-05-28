@@ -1,5 +1,6 @@
 # from main import app 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 #  import uvicorn
 from common.config_manager import Config_Manager
 from common.log_manager import Log_Manager
@@ -12,6 +13,8 @@ rs = Route_Service()
 
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # app.include_router(static.router)
 
 logger.info("App is started !")
