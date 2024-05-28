@@ -1,0 +1,44 @@
+{
+    // IntelliSense를 사용하여 가능한 특성에 대해 알아보세요.
+    // 기존 특성에 대한 설명을 보려면 가리킵니다.
+    // 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387을(를) 방문하세요.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Prd(FastApi)",
+            "type": "debugpy",
+            "request": "launch",
+            // "program": "fastapi run ",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload",
+                "--port",
+                "5000"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Dev(FastApi)",
+            "type": "debugpy",
+            "request": "launch",
+            // "program": "fastapi run --host 127.0.0.1 --port 5000",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload",
+                "--port",
+                "5000"
+            ],
+
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Test File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+    ]
+}
