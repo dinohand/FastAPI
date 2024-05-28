@@ -36,3 +36,11 @@ async def healthcheck():
 @app.post('/shutdown')
 def shutdown():
     logger.fatal("Dying...")
+
+@app.post('/fileupload')
+async def upload():
+    f = request.files['file']
+    f.save(f.filename)
+    return '성공 여부 try except로 처리 계획'
+
+
