@@ -11,8 +11,8 @@ def file_save(file_name):
         return "fail"
 
 def return_imagr_stream(img_local_path):
-   img_stream =''
-   with open(img_local_path,'rb') as im_f:
+    img_stream =''
+    with open(img_local_path,'rb') as im_f:
        img_stream =img_f.read()
        img_stream =base64.b64encode(img_stream).decode()
     return img_stream
