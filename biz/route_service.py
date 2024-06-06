@@ -1,4 +1,6 @@
 from common.log_manager import Log_Manager
+from common.db_manager import DB_Manager, Ora_Conn
+from common.config_manager import Config_Manager
 
 from fastapi import FastAPI
 from fastapi import Request, Response, UploadFile
@@ -40,3 +42,26 @@ class Route_Service:
 #     )   
     def test(self):
         pass
+
+    def set_oracle(self):
+        result= None
+        conn = DB_Manager().getOracle(Config_Manager().ora_info)
+        cur = conn.cursor()
+
+        cur.execute('select count(*) from dual')
+        res = cur.fetchall()
+        
+        print(len(res))
+        for row in res:
+            print(type( res[0] ) , ' ---' , row[0])
+            
+        
+        
+        cur.close
+        conn.close()
+        
+        return res[0]
+        
+        
+        
+        # return Ora_Conn().execute('select * from dual')

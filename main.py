@@ -15,6 +15,10 @@ logger = Log_Manager().getLogger("MAIN")
 cm = Config_Manager() ## config manager
 rs = Route_Service()
 
+
+
+
+
 # swagger_ui_default_parameters: Annotated[
 #     Dict[str, Any],
 #     Doc(
@@ -107,5 +111,7 @@ async def name_of_item(request : Request, item ):
     return await rs.item(request, item) 
  
 
-
-
+# Oracle 테스트
+@app.get("/oracle")
+def set_oracle():
+    return rs.set_oracle()

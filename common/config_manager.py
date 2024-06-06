@@ -1,38 +1,68 @@
+from configparser import ConfigParser
+from common.entities import ORACLE_DB
 import os
-import configparser
-
 
 class Config_Manager:
-    """_summary_ : 실행 모드 환경 변수 값과 config.ini 에 설정된 환경변수 값을 읽어들인다
-    """
+    ## 
+    properties = None
+    ora_info =  None
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Config_Manager, cls).__new__(cls)
+            
+            run_mode = os.getenv("RUN_MODE")
+            if not( run_mode == 'PRD' or run_mode =='DEV') : run_mode = 'TEST'
+            
+            
+            cfg = ConfigParser()
+            cfg.read("./config/" + run_mode.lower() + "_config.ini", encoding='UTF-8')
+            
+            
+            oracle_db = ORACLE_DB()
+            oracle_db.NAME = cfg['DATABASE']['NAME']
+            oracle_db.HOST = cfg['DATABASE']['HOST']
+            oracle_db.PORT = cfg['DATABASE']['PORT']
+            oracle_db.USER_ID = cfg['DATABASE']['USER_ID']
+            oracle_db.USER_PW = cfg['DATABASE']['USER_PW']
+            oracle_db.DB_NAME = cfg['DATABASE']['DB_NAME']
+            
+            Config_Manager.ora_info = oracle_db
+            Config_Manager.properties = cfg
+            
+        return cls.instance     
+        
     def __init__(self) -> None:
-        self._run_mode = os.getenv("RUN_MODE")
+        self.setOracle()
 
-        if  self._run_mode =="PRD":
-            pass
-        elif   self._run_mode =="DEV":
-            pass
-        elif   self._run_mode =="TEST":
-            pass
-        else :
-              self._run_mode =="TEST"
-        print('runmode is  ',self._run_mode)
+    def setOracle(self):
+        pass
+        # cfg = Config_Manager.properties
+        # oracle_db = ORACLE_DB()
+        # oracle_db.NAME = cfg['DATABASE']['NAME']
+        # oracle_db.HOST = cfg['DATABASE']['HOST']
+        # oracle_db.PORT = cfg['DATABASE']['PORT']
+        # oracle_db.USER_ID = cfg['DATABASE']['USER_ID']
+        # oracle_db.USER_PW = cfg['DATABASE']['USER_PW']
+        # oracle_db.DB_NAME = cfg['DATABASE']['DB_NAME']
+        # Config_Manager.ora_info = oracle_db
 
-        self._config = configparser.ConfigParser()
-        config_file = "./config/" + self._run_mode.lower() + "_config.ini"
-        # print("==== /////// " , config_file)
-        self._config.read(config_file)
-    
+        # print(oracle_db )        
+
+    def setDB_Conn(self):
+        log_level = cm.properties['DEFAULT']['LOG_LEVEL2'] if 'LOG_LEVEL2' in cm.properties['DEFAULT'] else '10'
+        print(log_level)
+        pass
     
     def getProperty(self, sec:str, key:str):
+        """Section과 Key해당되는 value를 리턴한다
+
+        Args:
+            sec (str): section
+            key (str): key
+        Returns:
+            any : key에 지정된 값
+        """
         try:
             return self._config[sec][key]
         except:
             return None
-
-    @property
-    def run_mode(self):
-        return self._run_mode
-    
-    def set_Properties(self):
-        pass
