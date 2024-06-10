@@ -1,9 +1,10 @@
 # from main import app 
 from fastapi import FastAPI
-from fastapi import Response, Request
+from fastapi import Response, Request, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 
 #  import uvicorn
 from common.config_manager import Config_Manager
@@ -113,5 +114,40 @@ async def name_of_item(request : Request, item ):
 
 # Oracle 테스트
 @app.get("/oracle")
-def set_oracle():
-    return rs.set_oracle()
+async def set_oracle():
+    return await rs.set_oracle()
+
+
+class Item(BaseModel):
+    id: str
+    name: str | None = None
+    
+# @app.post('/test/')
+# # async def test(request: Request):
+# async def test(item:Item ):
+#     return(item)
+    
+#     # return await rs.do_test(id)
+    
+    
+@app.post('/test/')
+# async def test(request: Request):
+async def test(request: Request):
+    
+    json_str = await  request.json()
+    
+    print(json_str.get('id'))
+    return rs.do_test(json_str.get('id'))
+
+class TEST_M(BaseModel):
+    id : str
+
+
+@app.post('/test2')
+# async def test(request: Request):
+async def test(m: TEST_M):
+    # return(m.get('id'))
+    return rs.do_test(m.id )
+
+
+

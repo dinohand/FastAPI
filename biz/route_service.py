@@ -43,7 +43,7 @@ class Route_Service:
     def test(self):
         pass
 
-    def set_oracle(self):
+    async def set_oracle(self):
         result= None
         conn = DB_Manager().getOracle(Config_Manager().ora_info)
         cur = conn.cursor()
@@ -61,7 +61,19 @@ class Route_Service:
         conn.close()
         
         return res[0]
+    
+    def do_test(self, id:str):
+        result= None
+        conn = DB_Manager().getOracle(Config_Manager().ora_info)
+        cur = conn.cursor()
+
+        cur.execute("select * from abc where id='" +id  +"'"  )
+        res = cur.fetchall()
         
+        cur.close
+        conn.close()
+        
+        return res
         
         
         # return Ora_Conn().execute('select * from dual')
