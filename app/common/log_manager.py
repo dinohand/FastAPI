@@ -26,14 +26,13 @@ class Log_Manager:
     def getLogger(self, name):
         cm = Config_Manager()
         log_level = cm.properties['DEFAULT']['LOG_LEVEL'] if 'LOG_LEVEL' in cm.properties['DEFAULT'] else '30'
-        
-        #  print('LOG_LEVEL is ', log_level)
-        
+        log_file = cm.properties['DEFAULT']['LOG_FILE'] if 'LOG_FILE' in cm.properties['DEFAULT'] else 'app.log'
+
         logger = logging.getLogger(name)   
         logger.setLevel(int(log_level))
 
         ## log file
-        fh = logging.FileHandler('app.log', encoding="utf-8")
+        fh = logging.FileHandler(log_file, encoding="utf-8")
         fh.setLevel(int(log_level))
 
         # log console

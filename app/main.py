@@ -2,21 +2,23 @@ from fastapi import FastAPI
 from fastapi import Response, Request, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
+
 from pydantic import BaseModel
 
 from app.common.config_manager import Config_Manager
 from app.common.log_manager import Log_Manager
 from app.biz.route_service import Route_Service
 
+from app.biz.queries import *
+from app.common.const import *
+
+
 logger = Log_Manager().getLogger("MAIN")
 
 cm = Config_Manager() ## config manager
 rs = Route_Service()
 
-
-logger.debug( f'Values =  {cm.getProperty("DEFAULT","LOG_LEVEL")}  ' )
-
+logger.debug( f'Main Module({__file__}) is activated' )
 
 # swagger_ui_default_parameters: Annotated[
 #     Dict[str, Any],
@@ -77,39 +79,13 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.mount("/NAS", StaticFiles(directory="NAS"), name="NAS")
 
-templates = Jinja2Templates(directory="static")
-# app.include_router(static.router)
-
-#--------------------------
-# @app.get('/')
-# def root():
-#     return rs.root()
-
-
-
+#---------------------------------------------------
 @app.get('/')
 async def read_item():
     return await rs.root()
-    
 
-# @app.get('/',  response_class=HTMLResponse)
-# async def read_item(request: Request):
-    
-#     return templates.TemplateResponse(
-#         request=request, name="index.html", context={} 
-#     )
-    
-    
 async def check_health():
     return await rs.heathCheck()
-    
-    # return {'message':'health check ok', 'code': 200}
-
-## shutdown
-# @app.route("/shutdown", methods=["POST"])
-@app.post('/shutdown')
-def shutdown():
-    logger.fatal("Dying...")
 
 @app.post('/fileupload')
 async def upload():
@@ -123,41 +99,41 @@ async def name_of_item(request : Request, item ):
  
 
 # Oracle 테스트
-@app.get("/oracle")
-async def set_oracle():
-    return await rs.set_oracle()
+@app.get("/test")
+async def test():
+    return await rs.test()
 
 
-class Item(BaseModel):
-    id: str
-    name: str | None = None
+# class Item(BaseModel):
+#     id: str
+#     name: str | None = None
+    
+# # @app.post('/test/')
+# # # async def test(request: Request):
+# # async def test(item:Item ):
+# #     return(item)
+    
+# #     # return await rs.do_test(id)
+    
     
 # @app.post('/test/')
 # # async def test(request: Request):
-# async def test(item:Item ):
-#     return(item)
-    
-#     # return await rs.do_test(id)
-    
-    
-@app.post('/test/')
 # async def test(request: Request):
-async def test(request: Request):
     
-    json_str = await  request.json()
+#     json_str = await  request.json()
     
-    print(json_str.get('id'))
-    return rs.do_test(json_str.get('id'))
+#     print(json_str.get('id'))
+#     return rs.do_test(json_str.get('id'))
 
-class TEST_M(BaseModel):
-    id : str
+# class TEST_M(BaseModel):
+#     id : str
 
 
-@app.post('/test2')
-# async def test(request: Request):
-async def test(m: TEST_M):
-    # return(m.get('id'))
-    return rs.do_test(m.id )
+# @app.post('/test2')
+# # async def test(request: Request):
+# async def test(m: TEST_M):
+#     # return(m.get('id'))
+#     return rs.do_test(m.id )
 
 
 

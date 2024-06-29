@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Prd(FastApi)",
+            "name": "Prduct",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",
@@ -21,7 +21,7 @@
             }
         },
         {
-            "name": "Dev(FastApi)",
+            "name": "Develop",
             "type": "debugpy",
             "request": "launch",
             "module": "uvicorn",

@@ -1,7 +1,10 @@
 __pycache__/
-/.venv
-/app.log
+.venv/
+test/
+config/
 *.pyc
+*.log
+
 
 # Distribution / packaging
 bin/

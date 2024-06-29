@@ -8,6 +8,9 @@ from app.common.log_manager import Log_Manager
 from app.common.db_manager import DB_Manager, Ora_Conn
 from app.common.config_manager import Config_Manager
 
+from app.common.const import *
+
+
 # 라우트에 따른 처리 프로세스
 class Route_Service:
     logger = None
@@ -28,51 +31,11 @@ class Route_Service:
     def hello(self):
         # self.logger.info("hello----------------")
         return "You need REST Api call"
-
-    # Static html을 서비스하는 route
-    async def item(self, request : Request,  item : str, response_class=HTMLResponse ):
-        return self.templates.TemplateResponse(
-            request=request, name="test.html", context={"item_name": item}
-        )
-
-    # async def read_item(request: Request, item: str):
-#     return templates.TemplateResponse(
-#         request=request, name="test.html", context={"item_name": item}
-#     )   
-    def test(self):
-        pass
-
-    async def set_oracle(self):
-        result= None
-        conn = DB_Manager().getOracle(Config_Manager().ora_info)
-        cur = conn.cursor()
-
-        cur.execute('select count(*) from dual')
-        res = cur.fetchall()
-        
-        print(len(res))
-        for row in res:
-            print(type( res[0] ) , ' ---' , row[0])
-            
-        
-        
-        cur.close
-        conn.close()
-        
-        return res[0]
-    
-    def do_test(self, id:str):
-        result= None
-        conn = DB_Manager().getOracle(Config_Manager().ora_info)
-        cur = conn.cursor()
-
-        cur.execute("select * from abc where id='" +id  +"'"  )
-        res = cur.fetchall()
-        
-        cur.close
-        conn.close()
-        
-        return res
-        
-        
-        # return Ora_Conn().execute('select * from dual')
+# -----------------------------------------------------------------------
+    async def test(self):
+        try:
+            return MSG_SUCCESS | { "result" :  DB_Manager().select('select * from wt_test', ())  }
+        except Exception as e:
+            return MSG_FAIL | {"Exeption" : e.args}
+        finally:
+            pass

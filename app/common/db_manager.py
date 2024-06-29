@@ -1,8 +1,10 @@
+import oracledb
+
 from app.common.config_manager import Config_Manager
 from app.common.log_manager import Log_Manager
 from app.common.entities import ORACLE_DB
+from app.common.const import *
 
-import oracledb
 
 class DB_Manager:
     logger = None
@@ -25,14 +27,47 @@ class DB_Manager:
             conn = oracledb.connect( user=ora_info.USER_ID , 
                                             password=ora_info.USER_PW, 
                                             dsn= ora_info.HOST + ':' + ora_info.PORT + '/' + ora_info.DB_NAME )
-            # cursor = con.cursor()
-            # cursor.close()
+
             return conn
         except Exception as e:
             print(e)
             return {"message":e,"status":400}
         finally:
             pass
+    def select(self, qry : str, param : tuple):
+        conn = self.getOracle(ora_info=Config_Manager().ora_info)
+        
+        try:
+            cursor = conn.cursor()
+            cursor.execute(qry, param)
+            res = cursor.fetchall()
+            print (f'res : {res}')
+                    
+            return MSG_SUCCESS | { "result" : res} 
+        except Exception as e:
+            return MSG_FAIL | {"Exception" : e.args}
+        finally:
+            cursor.close()
+            conn.close()
+
+    def execute(self, qry : str, param : tuple):
+        conn = self.getOracle(ora_info=Config_Manager().ora_info)
+
+        conn.autocommit(False)
+        conn.begin()
+        
+        try:
+            cursor = conn.cursor()
+            cursor.execute(qry, param)
+
+            conn.commit()
+            return MSG_SUCCESS | { "result": "" }
+        except Exception as e:
+            conn.rollback()
+            return MSG_FAIL | {"Exception" : e.args}
+        finally:
+            cursor.close()
+            comm.close()
     
 
 
