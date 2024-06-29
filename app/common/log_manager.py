@@ -1,5 +1,16 @@
-from common.config_manager import Config_Manager
+from app.common.config_manager import Config_Manager
+
 import logging, coloredlogs
+
+
+
+# LOG Level
+# NOTSET=0
+# DEBUG=10
+# INFO=20
+# WARN=30
+# ERROR=40
+# CRITICAL=50
 
 class Log_Manager:
     """_summary_ : logger를 생성하여 리턴한다
@@ -22,7 +33,7 @@ class Log_Manager:
         logger.setLevel(int(log_level))
 
         ## log file
-        fh = logging.FileHandler('app.log')
+        fh = logging.FileHandler('app.log', encoding="utf-8")
         fh.setLevel(int(log_level))
 
         # log console

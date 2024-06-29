@@ -1,4 +1,3 @@
-# from main import app 
 from fastapi import FastAPI
 from fastapi import Response, Request, Body
 from fastapi.staticfiles import StaticFiles
@@ -6,10 +5,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-#  import uvicorn
-from common.config_manager import Config_Manager
-from common.log_manager import Log_Manager
-from biz.route_service import Route_Service
+from app.common.config_manager import Config_Manager
+from app.common.log_manager import Log_Manager
+from app.biz.route_service import Route_Service
 
 logger = Log_Manager().getLogger("MAIN")
 
@@ -17,7 +15,7 @@ cm = Config_Manager() ## config manager
 rs = Route_Service()
 
 
-
+logger.debug( f'Values =  {cm.getProperty("DEFAULT","LOG_LEVEL")}  ' )
 
 
 # swagger_ui_default_parameters: Annotated[
@@ -53,7 +51,7 @@ app = FastAPI(
                 "url":  "https://github.com/dinohand",
                 "email": "excelon@live.co.kr",
             },            
-            icense_info={
+            license_info={
                 "name": "Apache 2.0",
                 "identifier": "MIT",
                 #  "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
@@ -77,6 +75,8 @@ app = FastAPI(
 # app = FastAPI(openapi_tags=tags_metadata)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/NAS", StaticFiles(directory="NAS"), name="NAS")
+
 templates = Jinja2Templates(directory="static")
 # app.include_router(static.router)
 
@@ -85,11 +85,21 @@ templates = Jinja2Templates(directory="static")
 # def root():
 #     return rs.root()
 
-@app.get('/',  response_class=HTMLResponse)
-async def read_item(request: Request):
-    return templates.TemplateResponse(
-        request=request, name="index.html", context={} 
-    )
+
+
+@app.get('/')
+async def read_item():
+    return await rs.root()
+    
+
+# @app.get('/',  response_class=HTMLResponse)
+# async def read_item(request: Request):
+    
+#     return templates.TemplateResponse(
+#         request=request, name="index.html", context={} 
+#     )
+    
+    
 async def check_health():
     return await rs.heathCheck()
     

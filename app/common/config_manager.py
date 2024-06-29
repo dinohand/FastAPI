@@ -1,5 +1,5 @@
 from configparser import ConfigParser
-from common.entities import ORACLE_DB
+from app.common.entities import ORACLE_DB
 import os
 
 class Config_Manager:
@@ -11,12 +11,12 @@ class Config_Manager:
             cls.instance = super(Config_Manager, cls).__new__(cls)
             
             run_mode = os.getenv("RUN_MODE")
+
             if not( run_mode == 'PRD' or run_mode =='DEV') : run_mode = 'TEST'
-            
-            
             cfg = ConfigParser()
-            cfg.read("./config/" + run_mode.lower() + "_config.ini", encoding='UTF-8')
             
+            config_file = os.getcwd() + "/app/config/"+ run_mode.lower() + "_config.ini"
+            cfg.read( config_file, encoding='UTF-8')
             
             oracle_db = ORACLE_DB()
             oracle_db.NAME = cfg['DATABASE']['NAME']
@@ -27,8 +27,7 @@ class Config_Manager:
             oracle_db.DB_NAME = cfg['DATABASE']['DB_NAME']
             
             Config_Manager.ora_info = oracle_db
-            Config_Manager.properties = cfg
-            
+            Config_Manager.properties = cfg 
         return cls.instance     
         
     def __init__(self) -> None:
@@ -49,7 +48,7 @@ class Config_Manager:
         # print(oracle_db )        
 
     def setDB_Conn(self):
-        log_level = cm.properties['DEFAULT']['LOG_LEVEL2'] if 'LOG_LEVEL2' in cm.properties['DEFAULT'] else '10'
+        log_level = cm.properties['DEFAULT']['LOG_LEVEL2'] if 'LOG_LEVEL' in cm.properties['DEFAULT'] else '10'
         print(log_level)
         pass
     
@@ -63,6 +62,6 @@ class Config_Manager:
             any : key에 지정된 값
         """
         try:
-            return self._config[sec][key]
+            return self.properties[sec][key]
         except:
             return None

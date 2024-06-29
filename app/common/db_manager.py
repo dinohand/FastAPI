@@ -1,6 +1,6 @@
-from common.config_manager import Config_Manager
-from common.log_manager import Log_Manager
-from common.entities import ORACLE_DB
+from app.common.config_manager import Config_Manager
+from app.common.log_manager import Log_Manager
+from app.common.entities import ORACLE_DB
 
 import oracledb
 
