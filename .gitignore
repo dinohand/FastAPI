@@ -1,7 +1,7 @@
 __pycache__/
 /.venv
 /app.log
-
+*.pyc
 
 # Distribution / packaging
 bin/
