@@ -5,9 +5,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from app.common.log_manager import Log_Manager
-from app.common.db_manager import DB_Manager, Ora_Conn
+from app.common.db_manager import DB_Manager
 from app.common.config_manager import Config_Manager
 
+from app.biz.queries import *
 from app.common.const import *
 
 
@@ -32,9 +33,19 @@ class Route_Service:
         # self.logger.info("hello----------------")
         return "You need REST Api call"
 # -----------------------------------------------------------------------
-    async def test(self):
+    async def select_all_test(self):
+        sql = QUERY_STR['tes'].get('select_all')
         try:
-            return MSG_SUCCESS | { "result" :  DB_Manager().select('select * from wt_test', ())  }
+            return MSG_SUCCESS | { "result" :  DB_Manager().select(sql, ())  }
+        except Exception as e:
+            return MSG_FAIL | {"Exeption" : e.args}
+        finally:
+            pass
+    
+    async def insert_test(self):
+        sql = QUERIES_STR['tes'].get('select')
+        try:
+            return MSG_SUCCESS | { "result" :  DB_Manager().select(sql, ())  }
         except Exception as e:
             return MSG_FAIL | {"Exeption" : e.args}
         finally:

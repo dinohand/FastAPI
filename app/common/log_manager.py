@@ -1,7 +1,7 @@
 from app.common.config_manager import Config_Manager
 
 import logging, coloredlogs
-
+import datetime
 
 
 # LOG Level
@@ -18,6 +18,7 @@ class Log_Manager:
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Log_Manager, cls).__new__(cls)
+            print(f'{datetime.datetime.now()}-({__name__}) is initialized')
         return cls.instance
     
     def __init__(self) -> None:
@@ -40,7 +41,7 @@ class Log_Manager:
         ch.setLevel(int(log_level))
 
         # log format
-        formatter = logging.Formatter( '%(asctime)s - [%(name)s] - %(levelname)s - %(message)s')
+        formatter = logging.Formatter( '%(asctime)s : [%(name)s] [%(levelname)s] - %(message)s')
         ch.setFormatter(formatter)
         fh.setFormatter(formatter)
 

@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from app.common.entities import ORACLE_DB
-import os
+import os, datetime
 
 class Config_Manager:
     ## 
@@ -28,6 +28,8 @@ class Config_Manager:
             
             Config_Manager.ora_info = oracle_db
             Config_Manager.properties = cfg 
+
+            print(f'{datetime.datetime.now()}-({__name__}) is initialized')
         return cls.instance     
         
     def __init__(self) -> None:

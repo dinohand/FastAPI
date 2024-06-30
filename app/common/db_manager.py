@@ -34,7 +34,17 @@ class DB_Manager:
             return {"message":e,"status":400}
         finally:
             pass
-    def select(self, qry : str, param : tuple):
+        
+    def select(self, qry : str, param : tuple) :
+        """Select query문을 실행행한다
+
+        Args:
+            qry (str): 쿼리문
+            param (tuple): 쿼리문에 사용되는 파라미터
+
+        Returns:
+            dict : 실행 결과 
+        """
         conn = self.getOracle(ora_info=Config_Manager().ora_info)
         
         try:
@@ -50,12 +60,19 @@ class DB_Manager:
             cursor.close()
             conn.close()
 
-    def execute(self, qry : str, param : tuple):
+    def execute(self, qry : str, param : tuple) -> dict:
+        """쿼리문을 실행한다
+            select문은 select() nethod를 실행한다
+        Args:
+            qry (str): 쿼리문
+            param (tuple): 쿼리문에 사용되는 파라미터
+        Returns:
+            dict: 실행 결과
+        """
         conn = self.getOracle(ora_info=Config_Manager().ora_info)
 
         conn.autocommit(False)
         conn.begin()
-        
         try:
             cursor = conn.cursor()
             cursor.execute(qry, param)
@@ -69,47 +86,45 @@ class DB_Manager:
             cursor.close()
             comm.close()
     
-
-
-class Ora_Conn(DB_Manager):
-    ora_conn = None
-    # def __new__(cls):
-    #     if not hasattr(cls, 'instance'):
-    #         cls.instance = super(Ora_Conn, cls).__new__(cls)
-    #     return cls.instance     
+# class Ora_Conn(DB_Manager):
+#     ora_conn = None
+#     # def __new__(cls):
+#     #     if not hasattr(cls, 'instance'):
+#     #         cls.instance = super(Ora_Conn, cls).__new__(cls)
+#     #     return cls.instance     
     
-    def __init__(self):
-        # super.__init__(self)
-        conn = super.getOracle(Config_Manager().ora_info)
-        Ora_Conn.ora_conn = conn 
+#     def __init__(self):
+#         # super.__init__(self)
+#         conn = super.getOracle(Config_Manager().ora_info)
+#         Ora_Conn.ora_conn = conn 
         
     
-    def getConn():
-        super.getOracle(Config_Manager().ora_info)
+#     def getConn():
+#         super.getOracle(Config_Manager().ora_info)
         
-        return super.getOracle()
-    def select(self, sql: str):
-        pass        
+#         return super.getOracle()
+#     def select(self, sql: str):
+#         pass        
     
-    def insert(self, sql:str):
-        pass
+#     def insert(self, sql:str):
+#         pass
     
-    def execute(self, sql:str):
-        msg = None
-        sts = None
-        try:
-            curs = Ora_Conn().ora_conn.cursor()
+#     def execute(self, sql:str):
+#         msg = None
+#         sts = None
+#         try:
+#             curs = Ora_Conn().ora_conn.cursor()
 
-            rs = curs.execute(sql)
-            msg = '성공'
-            sts = 200
-        except Exception as e:
-            logger.error(e)
-            msg = '실패'
-            sts = 300
-        finally:
-            curs.close()     
-        return { "message":msg, "status":sts}
+#             rs = curs.execute(sql)
+#             msg = '성공'
+#             sts = 200
+#         except Exception as e:
+#             logger.error(e)
+#             msg = '실패'
+#             sts = 300
+#         finally:
+#             curs.close()     
+#         return { "message":msg, "status":sts}
 
 # class SQLite(DB_Manager):
 #     def __init__(self):

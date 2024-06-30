@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi import Response, Request, Body
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 
 from pydantic import BaseModel
 
@@ -11,7 +11,7 @@ from app.biz.route_service import Route_Service
 
 from app.biz.queries import *
 from app.common.const import *
-
+from app.common.init import *
 
 logger = Log_Manager().getLogger("MAIN")
 
@@ -19,6 +19,8 @@ cm = Config_Manager() ## config manager
 rs = Route_Service()
 
 logger.debug( f'Main Module({__file__}) is activated' )
+
+do_1st()
 
 # swagger_ui_default_parameters: Annotated[
 #     Dict[str, Any],
@@ -45,8 +47,9 @@ app = FastAPI(
             summary='summary',
             description='Boilerplate',
             version='0.1',
+            root_path='',
             docs_url='/api/v1/docs',
-            redoc_url='/api/v1/redocs',
+            # redoc_url='/api/v1/redocs',
             terms_of_service="", ## "http://example.com/terms/",
             contact={
                 "name": "JK.Youk",
@@ -82,7 +85,9 @@ app.mount("/NAS", StaticFiles(directory="NAS"), name="NAS")
 #---------------------------------------------------
 @app.get('/')
 async def read_item():
-    return await rs.root()
+    redirect_url = '/static/index.html'
+    return RedirectResponse(redirect_url, status_code=303)
+    # return await rs.root()
 
 async def check_health():
     return await rs.heathCheck()
@@ -98,42 +103,8 @@ async def name_of_item(request : Request, item ):
     return await rs.item(request, item) 
  
 
-# Oracle 테스트
-@app.get("/test")
-async def test():
-    return await rs.test()
-
-
-# class Item(BaseModel):
-#     id: str
-#     name: str | None = None
-    
-# # @app.post('/test/')
-# # # async def test(request: Request):
-# # async def test(item:Item ):
-# #     return(item)
-    
-# #     # return await rs.do_test(id)
-    
-    
-# @app.post('/test/')
-# # async def test(request: Request):
-# async def test(request: Request):
-    
-#     json_str = await  request.json()
-    
-#     print(json_str.get('id'))
-#     return rs.do_test(json_str.get('id'))
-
-# class TEST_M(BaseModel):
-#     id : str
-
-
-# @app.post('/test2')
-# # async def test(request: Request):
-# async def test(m: TEST_M):
-#     # return(m.get('id'))
-#     return rs.do_test(m.id )
-
-
+#---------------------------------------------------
+@app.post("/test_select", tags=['Test'])
+async def select_all_test():
+    return await rs.select_all_test()
 
